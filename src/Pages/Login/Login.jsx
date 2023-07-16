@@ -11,7 +11,7 @@ import {
 import LOGO from "../../components/Sidebar/Logo/img.png";
 import { Logo } from "../../components/Sidebar/SidebarStyle";
 import { useNavigate } from "react-router-dom";
-import { BaseURL, Token } from "../../../CONSTANTS";
+import { BaseURL, updateToken } from "../../../CONSTANTS";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,17 +33,18 @@ function Login({ onLogin, setSuccess }) {
 
     axios
       .post(
-        `${BaseURL + "auth/v1/login"}`,
+        `${BaseURL}auth/v1/login`,
         { email, password },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: Token,
           },
         }
       )
       .then((response) => {
         console.log(response.data);
+        const { token } = response.data;
+        updateToken(token); // Update the Token value
         onLogin(response.data && 1);
         navigate("/");
         setSuccess(true);
